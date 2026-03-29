@@ -6,8 +6,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import pl.wsb.fitnesstracker.healthmetrics.api.HealthMetrics;
+import pl.wsb.fitnesstracker.training.api.Training;
 
 import java.time.LocalDate;
+import java.util.Collection;
 
 @Entity
 @Table(name = "users")
@@ -32,6 +35,12 @@ public class User {
 
     @Column(nullable = false, unique = true)
     private String email;
+
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
+    private Collection<Training> trainings;
+
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
+    private Collection<HealthMetrics> healthMetrics;
 
     public User(
             final String firstName,

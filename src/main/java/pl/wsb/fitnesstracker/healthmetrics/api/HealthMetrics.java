@@ -19,21 +19,24 @@ public class HealthMetrics {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Nullable
     private Long id;
 
-    @Column(name = "userid", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private int user_id;
 
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @Column(name = "weight", nullable = false)
+    @Nullable
+    @Column(name = "weight")
     private int weight;
 
+    @Nullable
     @Column(name = "height")
     private int height;
 
+    @Nullable
     @Column(name = "hearth_rate")
     private int heartRate;
 
