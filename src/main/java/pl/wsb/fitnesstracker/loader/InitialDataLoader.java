@@ -3,22 +3,26 @@ package pl.wsb.fitnesstracker.loader;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cglib.core.Local;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import pl.wsb.fitnesstracker.event.Event;
 import pl.wsb.fitnesstracker.training.api.Training;
 import pl.wsb.fitnesstracker.training.internal.ActivityType;
 import pl.wsb.fitnesstracker.user.api.User;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.time.LocalDate.now;
+import static java.time.LocalDate.of;
 import static java.util.Objects.isNull;
 
 /**
@@ -36,6 +40,8 @@ class InitialDataLoader {
 
     private final JpaRepository<Training, Long> trainingRepository;
 
+    private final JpaRepository<Event, Long> eventRepository;
+
     @EventListener
     @Transactional
     @SuppressWarnings({"squid:S1854", "squid:S1481", "squid:S1192", "unused"})
@@ -46,6 +52,7 @@ class InitialDataLoader {
 
         List<User> sampleUserList = generateSampleUsers();
         List<Training> sampleTrainingList = generateTrainingData(sampleUserList);
+        List<Event> sampleEventList = generateEventData(sampleUserList);
 
 
         log.info("Finished loading initial data");
@@ -76,6 +83,54 @@ class InitialDataLoader {
         return users;
     }
 
+    private List<Event> generateEventData(List<User> users) {
+        List<Event> eventData = new ArrayList<>();
+        Event event1 = new Event(
+                users.get(0),
+                "patrzenie",
+                "oczy",
+                LocalDate.of(2024, 1,27),
+                LocalDate.of(2024, 1,28),
+                "Polska",
+                "Warszawa"
+        );
+        Event event2 = new Event(
+                users.get(1),
+                "spotkanie",
+                "spotkanie",
+                LocalDate.of(2024, 2,26),
+                LocalDate.of(2024, 2,28),
+                "Polska",
+                "Warszawa"
+        );
+        Event event3 = new Event(
+                users.get(2),
+                "posiedzenie",
+                "krzesło",
+                LocalDate.of(2024, 6,1),
+                LocalDate.of(2024, 6,1),
+                "Polska",
+                "Warszawa"
+        );
+        Event event4 = new Event(
+                users.get(1),
+                "posiedzenie",
+                "krzesło",
+                LocalDate.of(2024, 6,1),
+                LocalDate.of(2024, 6,1),
+                "Polska",
+                "Warszawa"
+        );
+
+        eventData.add(event1);
+        eventData.add(event2);
+        eventData.add(event3);
+        eventData.add(event4);
+
+
+        eventRepository.saveAll(eventData);
+        return eventData;
+    }
     private List<Training> generateTrainingData(List<User> users) {
         List<Training> trainingData = new ArrayList<>();
 

@@ -8,6 +8,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
-    //@Query("SELECT e FROM Event e WHERE e.startDate > :now ORDER BY e.startDate")
-    //List<Event> findUpcoming(@Param("now") LocalDate now);
+    @Query("SELECT e.name, COUNT(e) FROM Event e GROUP BY e.name")
+    List<String> listEventNames();
 }

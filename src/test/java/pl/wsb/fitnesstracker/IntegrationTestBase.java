@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import pl.wsb.fitnesstracker.training.api.Training;
+import pl.wsb.fitnesstracker.training.internal.TrainingRepository;
 import pl.wsb.fitnesstracker.user.api.User;
 
 import java.util.List;
@@ -61,6 +62,5 @@ public abstract class IntegrationTestBase {
     protected List<Training> getAllTrainings() {
         return trainingRepository.findAll();
     }
-
 
 }
