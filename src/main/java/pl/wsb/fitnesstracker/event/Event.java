@@ -9,6 +9,7 @@ import pl.wsb.fitnesstracker.user.api.User;
 
 import java.time.LocalDate;
 
+
 @Entity
 @Table(name = "event")
 @Getter

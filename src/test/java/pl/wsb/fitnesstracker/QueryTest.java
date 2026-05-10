@@ -19,7 +19,7 @@ class QueryTest {
     private EventRepository eventRepository;
     @Test
     void queryReturnsValue(){
-        System.out.println("Łączny dystans: " + trainingRepository.sumUserTrainingsDistance(2L));
+        System.out.println("Łączny dystans: " + trainingRepository.sumUserTrainingsDistance(3L));
     }
 
     @Test

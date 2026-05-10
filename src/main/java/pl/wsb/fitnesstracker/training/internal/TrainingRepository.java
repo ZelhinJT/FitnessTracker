@@ -11,5 +11,5 @@ public interface TrainingRepository extends JpaRepository<Training, Long> {
             value = "SELECT SUM(DISTANCE) FROM TRAININGS WHERE USER_ID = :user_id",
             nativeQuery = true
     )
-    long sumUserTrainingsDistance(@Param("user_id") Long user_id);
+    float sumUserTrainingsDistance(@Param("user_id") Long user_id);
 }

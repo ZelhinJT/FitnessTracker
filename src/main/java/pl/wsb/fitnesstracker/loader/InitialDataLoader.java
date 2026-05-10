@@ -149,6 +149,12 @@ class InitialDataLoader {
                     ActivityType.CYCLING,
                     25.0,
                     18.5);
+            Training training3a5 = new Training(users.get(2),
+                    sdf.parse("2024-01-18 15:30:00"),
+                    sdf.parse("2024-01-18 17:00:00"),
+                    ActivityType.CYCLING,
+                    25.0,
+                    18.5);
             Training training3 = new Training(users.get(2),
                     sdf.parse("2024-01-17 07:45:00"),
                     sdf.parse("2024-01-17 09:00:00"),
@@ -201,6 +207,7 @@ class InitialDataLoader {
             trainingData.add(training1);
             trainingData.add(training2);
             trainingData.add(training3);
+            trainingData.add(training3a5);
             trainingData.add(training4);
             trainingData.add(training5);
             trainingData.add(training6);
