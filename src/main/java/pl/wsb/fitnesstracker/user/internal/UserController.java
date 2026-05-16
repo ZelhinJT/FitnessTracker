@@ -1,11 +1,11 @@
 package pl.wsb.fitnesstracker.user.internal;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.wsb.fitnesstracker.user.api.UserDto;
+import pl.wsb.fitnesstracker.user.api.UserProvider;
+
+import java.util.List;
 
 /**
  * UserController is responsible for handling HTTP requests related to user operations.
@@ -20,6 +20,8 @@ class UserController {
 
     private final UserMapper userMapper;
 
+    private final UserProvider userProvider;
+
     @PostMapping
     public UserDto addUser(@RequestBody UserDto userDto) throws InterruptedException {
 
@@ -29,4 +31,11 @@ class UserController {
         return null;
     }
 
+    @GetMapping("/simple")
+    public List<UserDto> getUsers() throws InterruptedException {
+
+        return this.userProvider.findAllUsers().stream()
+                .map(this.userMapper::toUserDto)
+                .toList();
+    }
 }
