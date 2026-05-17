@@ -27,7 +27,8 @@ target/
 /nbbuild/
 /dist/
 /nbdist/
-/.nb-gradle/
+/.nb-gradle/git add README.md
+
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
