@@ -1,4 +1,5 @@
 package pl.wsb.fitnesstracker.user.api;
+import java.util.Optional;
 
 /**
  * Interface (API) for modifying operations on {@link User} entities through the API.
@@ -13,5 +14,12 @@ public interface UserService {
      * @return The created user
      */
     User createUser(User user);
+
+
+
+
+    void deleteUser(Long userId);
+
+    Optional<User> updateUser(Long userId, UpdateUserDto updateUserDto);
 
 }

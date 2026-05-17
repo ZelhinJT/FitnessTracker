@@ -3,7 +3,6 @@ package pl.wsb.fitnesstracker.user.api;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -11,7 +10,6 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "users")
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class User {
@@ -41,6 +39,43 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthdate = birthdate;
+        this.email = email;
+    }
+
+    @Nullable
+    public Long getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public LocalDate getBirthdate() {
+        return birthdate;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void updateFirstName(final String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void updateLastName(final String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void updateBirthdate(final LocalDate birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public void updateEmail(final String email) {
         this.email = email;
     }
 
