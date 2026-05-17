@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.jdbc.core.JdbcTemplate;
 import pl.wsb.fitnesstracker.training.api.Training;
-import pl.wsb.fitnesstracker.training.internal.TrainingRepository;
 import pl.wsb.fitnesstracker.user.api.User;
 
 import java.util.List;
@@ -22,22 +22,23 @@ public abstract class IntegrationTestBase {
     @Autowired
     private JpaRepository<Training, Long> trainingRepository;
 
-    @AfterEach
-    void cleanUp() {
-        cleanDatabase();
-
-    }
-
-    private void cleanDatabase() {
-        trainingRepository.deleteAll();
-        userRepository.deleteAll();
-    }
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     public void setUp() {
-
         cleanDatabase();
+    }
 
+    @AfterEach
+    void cleanUp() {
+        cleanDatabase();
+    }
+
+    private void cleanDatabase() {
+        jdbcTemplate.update("DELETE FROM EVENT");
+        jdbcTemplate.update("DELETE FROM TRAININGS");
+        jdbcTemplate.update("DELETE FROM USERS");
     }
 
     protected Training persistTraining(Training training) {
@@ -45,7 +46,6 @@ public abstract class IntegrationTestBase {
     }
 
     protected User existingUser(User user) {
-
         return userRepository.save(user);
     }
 
@@ -54,8 +54,8 @@ public abstract class IntegrationTestBase {
     }
 
     protected List<Training> createAllTrainings(List<Training> trainings) {
-
         trainings.forEach(training -> trainingRepository.save(training));
+
         return trainings;
     }
 

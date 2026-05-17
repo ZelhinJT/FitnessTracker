@@ -61,15 +61,23 @@ class UserApiIntegrationTest extends IntegrationTestBase {
         User user1 = existingUser(generateUser());
         User user2 = existingUser(generateUser());
 
-        mockMvc.perform(get("/v1/users/simple").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/users/zadanie1")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(log())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
+
+                .andExpect(jsonPath("$[0].id").value(user1.getId().intValue()))
                 .andExpect(jsonPath("$[0].firstName").value(user1.getFirstName()))
                 .andExpect(jsonPath("$[0].lastName").value(user1.getLastName()))
+                .andExpect(jsonPath("$[0].birthdate").doesNotExist())
+                .andExpect(jsonPath("$[0].email").doesNotExist())
 
+                .andExpect(jsonPath("$[1].id").value(user2.getId().intValue()))
                 .andExpect(jsonPath("$[1].firstName").value(user2.getFirstName()))
                 .andExpect(jsonPath("$[1].lastName").value(user2.getLastName()))
+                .andExpect(jsonPath("$[1].birthdate").doesNotExist())
+                .andExpect(jsonPath("$[1].email").doesNotExist())
 
                 .andExpect(jsonPath("$[2]").doesNotExist());
     }
@@ -93,44 +101,47 @@ class UserApiIntegrationTest extends IntegrationTestBase {
     void shouldReturnDetailsAboutUser_whenGettingUserByEmail() throws Exception {
         User user1 = existingUser(generateUser());
 
-        mockMvc.perform(get("/v1/users/email").param("email", user1.getEmail()).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/users/email/" + user1.getEmail())
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(log())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id").value(user1.getId().intValue()))
-                .andExpect(jsonPath("$[0].email").value(user1.getEmail()));
+                .andExpect(jsonPath("$.id").value(user1.getId().intValue()))
+                .andExpect(jsonPath("$.firstName").value(user1.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(user1.getLastName()))
+                .andExpect(jsonPath("$.birthdate").value(ISO_DATE.format(user1.getBirthdate())))
+                .andExpect(jsonPath("$.email").value(user1.getEmail()));
     }
 
     @Test
     void shouldReturnAllUsersOlderThan_whenGettingAllUsersOlderThan() throws Exception {
-        User user1 = existingUser(generateUserWithDate(LocalDate.of(2000, 8, 11)));
-        existingUser(generateUserWithDate(LocalDate.of(2024, 8, 11)));
+        User user1 = existingUser(generateUserWithDate(LocalDate.of(1990, 8, 11)));
+        existingUser(generateUserWithDate(LocalDate.now().minusYears(5)));
 
-
-        mockMvc.perform(get("/v1/users/older/{time}", LocalDate.of(2024, 8, 10)).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/users/older-than/{age}", 18)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(log())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
+
+                .andExpect(jsonPath("$[0].id").value(user1.getId().intValue()))
                 .andExpect(jsonPath("$[0].firstName").value(user1.getFirstName()))
                 .andExpect(jsonPath("$[0].lastName").value(user1.getLastName()))
                 .andExpect(jsonPath("$[0].birthdate").value(ISO_DATE.format(user1.getBirthdate())))
+                .andExpect(jsonPath("$[0].email").value(user1.getEmail()))
 
                 .andExpect(jsonPath("$[1]").doesNotExist());
     }
-
     @Test
     void shouldRemoveUserFromRepository_whenDeletingClient() throws Exception {
         User user1 = existingUser(generateUser());
 
-
         mockMvc.perform(delete("/v1/users/{userId}", user1.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(log())
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
 
         List<User> allUser = getAllUsers();
         assertThat(allUser).isEmpty();
-
     }
 
     @Test
@@ -160,7 +171,7 @@ class UserApiIntegrationTest extends IntegrationTestBase {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(creationRequest))
                 .andDo(log())
-                .andExpect(status().isCreated());
+                .andExpect(status().isOk());
 
         List<User> allUsers = getAllUsers();
         User user = allUsers.get(0);
